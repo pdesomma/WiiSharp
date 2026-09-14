@@ -8,7 +8,7 @@ Disc layout and partition crypto follow the [WiiBrew](https://wiibrew.org/wiki/W
 
 ## Status
 
-Early. What exists: the disc header, partition table, tickets, title-key derivation from a caller-supplied common key, per-cluster partition data crypto — enough to implement `WiiUSharp.Nfs.IPartitionCipher` — a reader for WBFS containers, split parts included, a reader for Dolphin GCZ images, and a disc builder that writes a hashed plaintext partition around any main.dol and files, reusing the apploader and certificate chain of a disc you already have. WAD files and DOL patching follow.
+Early. What exists: the disc header, partition table, tickets, title-key derivation from a caller-supplied common key, per-cluster partition data crypto — enough to implement `WiiUSharp.Nfs.IPartitionCipher` — a reader for WBFS containers, split parts included, a reader for Dolphin GCZ images, a disc builder that writes a hashed plaintext partition around any main.dol and files, reusing the apploader and certificate chain of a disc you already have, and readers for DOL headers and the signed parts of a WAD. WAD contents and DOL patching follow.
 
 ```csharp
 using WiiSharp;
@@ -43,7 +43,7 @@ WiiDiscBuildResult result = builder.Build(built);         // plaintext clusters 
 
 | Package | Targets | Purpose |
 |---|---|---|
-| `WiiSharp` | net48, net6.0, net8.0, net10.0 | Disc images, partitions, tickets, TMDs, title keys, disc building, WBFS and GCZ containers. |
+| `WiiSharp` | net48, net6.0, net8.0, net10.0 | Disc images, partitions, tickets, TMDs, title keys, disc building, DOL and WAD headers, WBFS and GCZ containers. |
 
 ```
 dotnet add package WiiSharp

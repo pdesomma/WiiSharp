@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>0.4.0</Version>
+    <Version>0.5.0</Version>
     <Title>WiiSharp</Title>
     <Description>.NET library for Wii and GameCube file formats: disc images, partitions, tickets and title keys.</Description>
-    <PackageReleaseNotes>0.4.0: disc builder with hashed plaintext partitions, fakesigned ticket/TMD, FST, apploader extraction, GCZ reader.</PackageReleaseNotes>
+    <PackageReleaseNotes>0.5.0: DOL header and WAD header/ticket/TMD readers.</PackageReleaseNotes>
   </PropertyGroup>
 
 </Project>
