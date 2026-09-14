@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Restore
+        run: dotnet restore WiiSharp.sln
+
+      - name: Build
+        run: dotnet build WiiSharp.sln --no-restore --configuration Release
+
+      - name: Test
+        run: dotnet test WiiSharp.sln --no-build --configuration Release --logger "trx;LogFileName=results.trx"
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: '**/TestResults/*.trx'
+
+  pack:
+    needs: build-test
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: windows-latest
+    # Trusted Publishing: nuget.org trusts this repo + workflow via OIDC; no long-lived API key.
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Pack
+        run: |
+          dotnet pack WiiSharp/WiiSharp.csproj --configuration Release --output nupkg
+
+      - name: Upload packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: nupkg
+          path: |
+            nupkg/*.nupkg
+            nupkg/*.snupkg
+
+      - name: NuGet login (OIDC)
+        id: nuget-login
+        uses: NuGet/login@v1
+        with:
+          user: bigguy3311
+
+      - name: Push to nuget.org
+        # NuGet does not expand a forward-slash glob on Windows; push each package explicitly.
+        # Matching .snupkg go along automatically.
+        run: |
+          Get-ChildItem nupkg -Filter *.nupkg | Sort-Object Name | ForEach-Object {
+            dotnet nuget push $_.FullName --api-key ${{ steps.nuget-login.outputs.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
