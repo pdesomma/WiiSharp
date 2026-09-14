@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <Title>WiiSharp</Title>
     <Description>.NET library for Wii and GameCube file formats: disc images, partitions, tickets and title keys.</Description>
-    <PackageReleaseNotes>0.1.0: initial release.</PackageReleaseNotes>
+    <PackageReleaseNotes>0.2.0: region area (DiscRegion, RegionSettings, RegionArea).</PackageReleaseNotes>
   </PropertyGroup>
 
 </Project>
