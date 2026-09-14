@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-09-14
+
+### Added
+- `WiiDiscBuilder`, `DiscFile`, `WiiDiscBuildResult`: write a single-partition disc with plaintext, fully hashed clusters (H0-H3), a fakesigned ticket and TMD, the region area and the retail disc magic.
+- `PartitionSystemFiles`, `Apploader`, `PartitionDataStream`: pull boot.bin, bi2.bin, the apploader and the certificate chain out of a plaintext partition, and read its payload with hash blocks skipped.
+- `Fst`, `FstFile`: build and parse the file system table.
+- `Tmd`, `TmdContent`, `Ticket.Build`, `Signature`: build disc tickets and TMDs; trucha-style fakesigning.
+- `HashGroup`: H0-H2 tables for one 64-cluster group.
+- `GczFile`, `GczHeader`, `GczStream`: read Dolphin GCZ images as a seekable stream.
+- `DiscFormat`: hash group, H3, apploader and single-layer constants.
+
 ## [0.3.0] - 2026-09-14
 
 ### Added
