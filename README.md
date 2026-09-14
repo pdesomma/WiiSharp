@@ -1,10 +1,10 @@
 # WiiSharp
 
-.NET library for Wii and GameCube file formats. No native dependencies, no keys, no Nintendo assets.
+.NET library for Wii and GameCube file formats.
 
 Not affiliated with or endorsed by Nintendo. Wii and GameCube are trademarks of Nintendo.
 
-Disc layout and partition crypto follow the [WiiBrew](https://wiibrew.org/wiki/Wii_disc) documentation and the behaviour of [nfs2iso2nfs](https://github.com/FIX94/nfs2iso2nfs) by sabykos, piratesephiroth and FIX94. This is a new implementation, not a port of their code.
+Disc layout and partition crypto follow the [WiiBrew](https://wiibrew.org/wiki/Wii_disc) documentation and the behaviour of [nfs2iso2nfs](https://github.com/FIX94/nfs2iso2nfs) by sabykos, piratesephiroth and FIX94. 
 
 ## Status
 
