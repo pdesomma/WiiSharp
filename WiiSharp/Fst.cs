@@ -92,6 +92,42 @@ public static class Fst
         return files;
     }
 
+    /// <summary>
+    /// File entries as stored: index, raw offset word and length; directories skipped.
+    /// </summary>
+    /// <param name="bytes">Whole table.</param>
+    internal static List<FstEntry> FileEntries(byte[] bytes)
+    {
+        if (bytes.Length < EntrySize)
+            throw new InvalidDataException("Table is shorter than its root entry.");
+
+        var count = checked((int)BigEndian.ReadUInt32(bytes, 8));
+        if (count < 1 || count * EntrySize > bytes.Length)
+            throw new InvalidDataException("Entry count exceeds the table.");
+
+        var entries = new List<FstEntry>();
+        for (var i = 1; i < count; i++)
+        {
+            var at = i * EntrySize;
+            if (bytes[at] == 0)
+                entries.Add(new FstEntry(i, BigEndian.ReadUInt32(bytes, at + 4), BigEndian.ReadUInt32(bytes, at + 8)));
+        }
+        return entries;
+    }
+
+    /// <summary>
+    /// Overwrites one file entry's raw offset word and length.
+    /// </summary>
+    /// <param name="bytes">Whole table.</param>
+    /// <param name="index">Entry index.</param>
+    /// <param name="rawOffset">Offset word as stored.</param>
+    /// <param name="length">File length.</param>
+    internal static void SetFileEntry(byte[] bytes, int index, uint rawOffset, uint length)
+    {
+        BigEndian.WriteUInt32(bytes, index * EntrySize + 4, rawOffset);
+        BigEndian.WriteUInt32(bytes, index * EntrySize + 8, length);
+    }
+
     private static void Emit(Node node, int parent, List<byte[]> entries, MemoryStream names)
     {
         var entry = new byte[EntrySize];

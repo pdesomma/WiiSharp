@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-09-15
+
+### Added
+- `NkitGameCube`: compact a GameCube image to NKit and restore it bit for bit; output matches NKit's own files byte for byte, CRC-32 patched so the compact file checksums like its source.
+- `NkitHeader`: the block NKit keeps at 0x200.
+- `JunkGenerator`: the lagged Fibonacci filler between files, reseeded per 32 KiB sector.
+- `Crc32`: reflected CRC-32 with rewind and a four-byte forcing patch.
+- `PartitionDataStream` and `PartitionSystemFiles.Read` take `hashed: false` to read partitions NKit stored bare, without hash blocks.
+
 ## [0.5.0] - 2026-09-14
 
 ### Added
