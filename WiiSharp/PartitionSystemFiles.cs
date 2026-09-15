@@ -59,7 +59,15 @@ public sealed class PartitionSystemFiles
     /// </summary>
     /// <param name="disc">Seekable plaintext disc image.</param>
     /// <param name="partition">Partition to read.</param>
-    public static PartitionSystemFiles Read(Stream disc, Partition partition)
+    public static PartitionSystemFiles Read(Stream disc, Partition partition) => Read(disc, partition, hashed: true);
+
+    /// <summary>
+    /// Reads the files from a partition whose clusters are plaintext.
+    /// </summary>
+    /// <param name="disc">Seekable plaintext disc image.</param>
+    /// <param name="partition">Partition to read.</param>
+    /// <param name="hashed">False when the payload is stored bare, without hash blocks, as NKit writes it.</param>
+    public static PartitionSystemFiles Read(Stream disc, Partition partition, bool hashed)
     {
         if (disc is null)
             throw new ArgumentNullException(nameof(disc));
@@ -69,7 +77,7 @@ public sealed class PartitionSystemFiles
             throw new InvalidDataException("Partition has no certificate chain.");
 
         var chain = disc.ReadExactlyAt(partition.Offset + partition.Header.CertificateChainOffset, checked((int)partition.Header.CertificateChainSize));
-        var data = new PartitionDataStream(disc, partition);
+        var data = new PartitionDataStream(disc, partition, hashed);
         var boot = data.ReadExactlyAt(0, DiscFormat.BootSize);
         var bi2 = data.ReadExactly(DiscFormat.Bi2Size);
         return new PartitionSystemFiles(boot, bi2, Apploader.Read(data), chain);

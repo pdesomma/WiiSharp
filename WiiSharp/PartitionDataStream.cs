@@ -7,6 +7,7 @@ public sealed class PartitionDataStream : Stream
 {
     private readonly Stream _disc;
     private readonly long _dataStart;
+    private readonly bool _hashed;
     private readonly long _length;
     private long _position;
 
@@ -16,6 +17,17 @@ public sealed class PartitionDataStream : Stream
     /// <param name="disc">Seekable disc image whose partition clusters are plaintext; not disposed.</param>
     /// <param name="partition">Partition to expose.</param>
     public PartitionDataStream(Stream disc, Partition partition)
+        : this(disc, partition, hashed: true)
+    {
+    }
+
+    /// <summary>
+    /// Creates a new instance of the <see cref="PartitionDataStream"/> class.
+    /// </summary>
+    /// <param name="disc">Seekable disc image whose partition clusters are plaintext; not disposed.</param>
+    /// <param name="partition">Partition to expose.</param>
+    /// <param name="hashed">False when the payload is stored bare, without hash blocks, as NKit writes it.</param>
+    public PartitionDataStream(Stream disc, Partition partition, bool hashed)
     {
         if (disc is null)
             throw new ArgumentNullException(nameof(disc));
@@ -26,7 +38,8 @@ public sealed class PartitionDataStream : Stream
 
         _disc = disc;
         _dataStart = partition.DataStart;
-        _length = partition.Header.DataSize / DiscFormat.ClusterSize * DiscFormat.ClusterDataSize;
+        _hashed = hashed;
+        _length = hashed ? partition.Header.DataSize / DiscFormat.ClusterSize * DiscFormat.ClusterDataSize : partition.Header.DataSize;
     }
 
     /// <inheritdoc/>
@@ -60,10 +73,19 @@ public sealed class PartitionDataStream : Stream
         var total = 0;
         while (count > 0 && _position < _length)
         {
-            var cluster = _position / DiscFormat.ClusterDataSize;
-            var within = (int)(_position % DiscFormat.ClusterDataSize);
-            var chunk = (int)Math.Min(count, Math.Min(DiscFormat.ClusterDataSize - within, _length - _position));
-            _disc.Position = _dataStart + cluster * DiscFormat.ClusterSize + DiscFormat.ClusterHashSize + within;
+            int chunk;
+            if (_hashed)
+            {
+                var cluster = _position / DiscFormat.ClusterDataSize;
+                var within = (int)(_position % DiscFormat.ClusterDataSize);
+                chunk = (int)Math.Min(count, Math.Min(DiscFormat.ClusterDataSize - within, _length - _position));
+                _disc.Position = _dataStart + cluster * DiscFormat.ClusterSize + DiscFormat.ClusterHashSize + within;
+            }
+            else
+            {
+                chunk = (int)Math.Min(count, _length - _position);
+                _disc.Position = _dataStart + _position;
+            }
             var read = _disc.Read(buffer, offset, chunk);
             if (read == 0)
                 throw new EndOfStreamException("Disc image ends inside the partition.");
