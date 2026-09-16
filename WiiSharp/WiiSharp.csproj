@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>0.6.1</Version>
+    <Version>0.7.0</Version>
     <Title>WiiSharp</Title>
     <Description>.NET library for Wii and GameCube file formats: disc images, partitions, tickets and title keys.</Description>
-    <PackageReleaseNotes>0.6.1: H2 hash table written at its real offset (0x340); built discs now pass the hash check on hardware.</PackageReleaseNotes>
+    <PackageReleaseNotes>0.7.0: DolFile (add sections, patch by address) and GeckoCodes (.gct, Ocarina, Dolphin ini).</PackageReleaseNotes>
   </PropertyGroup>
 
 </Project>

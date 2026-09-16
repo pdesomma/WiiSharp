@@ -8,7 +8,7 @@ Disc layout and partition crypto follow the [WiiBrew](https://wiibrew.org/wiki/W
 
 ## Status
 
-Early. What exists: the disc header, partition table, tickets, title-key derivation from a caller-supplied common key, per-cluster partition data crypto — enough to implement `WiiUSharp.Nfs.IPartitionCipher` — a reader for WBFS containers, split parts included, a reader for Dolphin GCZ images, a disc builder that writes a hashed plaintext partition around any main.dol and files, reusing the apploader and certificate chain of a disc you already have, readers for DOL headers and the signed parts of a WAD, the junk generator Nintendo's mastering used between files, and NKit: GameCube images compact to `.nkit.iso` and restore bit for bit, Wii NKit partitions read as bare plaintext. WAD contents and DOL patching follow.
+Early. What exists: the disc header, partition table, tickets, title-key derivation from a caller-supplied common key, per-cluster partition data crypto — enough to implement `WiiUSharp.Nfs.IPartitionCipher` — a reader for WBFS containers, split parts included, a reader for Dolphin GCZ images, a disc builder that writes a hashed plaintext partition around any main.dol and files, reusing the apploader and certificate chain of a disc you already have, readers for DOL headers and the signed parts of a WAD, a DOL editor that adds sections and patches by address, Gecko cheat codes in .gct and text form, the junk generator Nintendo's mastering used between files, and NKit: GameCube images compact to `.nkit.iso` and restore bit for bit, Wii NKit partitions read as bare plaintext. WAD contents and DOL patching follow.
 
 ```csharp
 using WiiSharp;
