@@ -163,6 +163,24 @@ public class WiiDiscBuilderTests
         Assert.ThrowsExactly<ArgumentNullException>(() => PartitionSystemFiles.Read(null!, null!));
     }
 
+    [TestMethod]
+    public void HashGroup_Layout_MatchesRetailClusters()
+    {
+        // verified against a retail disc: H0 at 0, H1 at 0x280, H2 at 0x340, the IV inside H2 at 0x3D0
+        Assert.AreEqual(0x280, HashGroup.H1Offset);
+        Assert.AreEqual(0x340, HashGroup.H2Offset);
+        Assert.IsTrue(DiscFormat.ClusterIvOffset > HashGroup.H2Offset && DiscFormat.ClusterIvOffset < HashGroup.H2Offset + HashGroup.H1Size);
+
+        var data = Enumerable.Range(0, DiscFormat.GroupDataSize).Select(i => (byte)(i * 7)).ToArray();
+        var clusters = new byte[DiscFormat.GroupClusters * DiscFormat.ClusterSize];
+        HashGroup.Write(data, clusters);
+
+        Assert.IsTrue(clusters.Skip(0x320).Take(0x20).All(x => x == 0), "gap between H1 and H2 is zero");
+        Assert.IsTrue(clusters.Skip(0x340).Take(20).Any(x => x != 0), "H2 starts at 0x340");
+        Assert.IsTrue(clusters.Skip(0x3E0).Take(0x20).All(x => x == 0), "padding after H2 is zero");
+        CollectionAssert.AreEqual(clusters.Skip(0x340).Take(0xA0).ToArray(), clusters.Skip(DiscFormat.ClusterSize + 0x340).Take(0xA0).ToArray(), "every cluster carries the group's H2");
+    }
+
     private static void AssertHashTree(Stream output, Partition partition, SHA1 sha1, byte[] h3)
     {
         var groups = partition.Header.DataSize / DiscFormat.ClusterSize / DiscFormat.GroupClusters;

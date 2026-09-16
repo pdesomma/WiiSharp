@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.6.1] - 2026-09-15
+
+### Fixed
+- `HashGroup`: the H2 table sits at 0x340 of a cluster, not 0x320; discs built with earlier versions fail the console's hash check and hang.
+
 ## [0.6.0] - 2026-09-15
 
 ### Added
