@@ -14,7 +14,7 @@ public static class HashGroup
     /// <summary>
     /// Offset of the H2 table inside a cluster.
     /// </summary>
-    public const int H2Offset = 0x320;
+    public const int H2Offset = 0x340;
     /// <summary>
     /// Bytes of the H0 table: 31 hashes.
     /// </summary>
