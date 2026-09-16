@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-09-15
+
+### Added
+- `DolFile`: a DOL in memory - add sections, find patterns, read and write by load address, serialise.
+- `GeckoCodes`, `GeckoCodeLine`: read a .gct, Ocarina text or a Dolphin ini's [Gecko] section; write a .gct.
+
 ## [0.6.1] - 2026-09-15
 
 ### Fixed
